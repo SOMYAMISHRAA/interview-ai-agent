@@ -5,6 +5,7 @@ import type {
   InterviewStartResponse,
   InterviewAnswerRequest,
   InterviewAnswerResponse,
+  FeedbackReport,
 } from "@/types/interview";
 
 /**
@@ -13,13 +14,10 @@ import type {
 export async function startInterview(
   request: InterviewStartRequest
 ): Promise<InterviewStartResponse> {
-  return apiRequest<InterviewStartResponse>(
-    "/interview/start",
-    {
-      method: "POST",
-      body: request,
-    }
-  );
+  return apiRequest<InterviewStartResponse>("/interview/start", {
+    method: "POST",
+    body: request,
+  });
 }
 
 /**
@@ -28,11 +26,19 @@ export async function startInterview(
 export async function submitAnswer(
   request: InterviewAnswerRequest
 ): Promise<InterviewAnswerResponse> {
-  return apiRequest<InterviewAnswerResponse>(
-    "/interview/answer",
-    {
-      method: "POST",
-      body: request,
-    }
+  return apiRequest<InterviewAnswerResponse>("/interview/answer", {
+    method: "POST",
+    body: request,
+  });
+}
+
+/**
+ * Get the final feedback for a completed interview.
+ */
+export async function getFeedback(
+  sessionId: string
+): Promise<FeedbackReport> {
+  return apiRequest<FeedbackReport>(
+    `/interview/${sessionId}/feedback`
   );
 }
