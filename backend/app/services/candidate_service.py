@@ -7,7 +7,11 @@ from app.models.interview_profile import InterviewProfile
 class CandidateService:
 
     def __init__(self):
-        self.data_path = Path("data/candidates.json")
+        # Project root:
+        # interview-ai-agent/
+        project_root = Path(__file__).resolve().parents[3]
+
+        self.data_path = project_root / "data" / "candidates.json"
 
         with open(self.data_path, "r", encoding="utf-8") as file:
             self.data = json.load(file)["candidates"]
@@ -20,7 +24,6 @@ class CandidateService:
 
         return None
 
-    # ---------- STEP 3 ----------
     def build_interview_profile(self, candidate_id: str):
 
         candidate = self.get_candidate(candidate_id)
@@ -41,22 +44,27 @@ class CandidateService:
 
         for mission in missions:
 
+            day = mission["day"]
+
             if mission.get("passed") is True:
-                completed_days.append(mission["day"])
+
+                completed_days.append(day)
 
                 if mission.get("attempts", 0) == 1:
-                    strong_days.append(mission["title"])
+                    strong_days.append(day)
 
                 elif mission.get("attempts", 0) >= 4:
-                    weak_days.append(mission["title"])
+                    weak_days.append(day)
 
             elif mission.get("passed") is False:
-                failed_days.append(mission["day"])
-                weak_days.append(mission["title"])
+
+                failed_days.append(day)
+                weak_days.append(day)
 
             elif mission.get("skipped"):
-                skipped_days.append(mission["day"])
-                weak_days.append(mission["title"])
+
+                skipped_days.append(day)
+                weak_days.append(day)
 
         difficulty = self._calculate_difficulty(
             member["yearsExperience"],
@@ -81,7 +89,6 @@ class CandidateService:
             first_try_success=signals["missionsFirstTry"],
         )
 
-    # ---------- STEP 4 ----------
     def _calculate_difficulty(
         self,
         experience: int,

@@ -5,7 +5,12 @@ from pathlib import Path
 class CurriculumRetriever:
 
     def __init__(self):
-        self.data_path = Path("data/curriculum.json")
+
+        # Project root:
+        # interview-ai-agent/
+        project_root = Path(__file__).resolve().parents[3]
+
+        self.data_path = project_root / "data" / "curriculum.json"
 
         with open(self.data_path, "r", encoding="utf-8") as file:
             self.curriculum = json.load(file)

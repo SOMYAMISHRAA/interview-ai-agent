@@ -27,39 +27,36 @@ class InterviewPolicy:
     ) -> list[dict]:
 
         plan = []
-
         selected_days = []
 
-        # Prioritize weak areas first
-        selected_days.extend(profile.weak_days)
-
-        # Add completed curriculum days
-        for day in profile.completed_days:
-
+        # 1. Prioritize weak areas.
+        for day in profile.weak_days:
             if day not in selected_days:
                 selected_days.append(day)
 
-        # Keep only required number of curriculum days
+        # 2. Add completed curriculum days.
+        for day in profile.completed_days:
+            if day not in selected_days:
+                selected_days.append(day)
+
+        # 3. Select at least the required number of
+        # curriculum days, when available.
         selected_days = selected_days[: self.MIN_CURRICULUM_DAYS]
 
-        # Create structured interview plan
+        # 4. Assign an initial difficulty and question type
+        # to each curriculum area.
+        question_types = [
+            ("easy", "concept"),
+            ("medium", "implementation"),
+            ("medium", "scenario"),
+            ("hard", "architecture"),
+        ]
+
         for index, day in enumerate(selected_days):
 
-            if index == 0:
-                difficulty = "easy"
-                question_type = "concept"
-
-            elif index == 1:
-                difficulty = "medium"
-                question_type = "implementation"
-
-            elif index == 2:
-                difficulty = "medium"
-                question_type = "scenario"
-
-            else:
-                difficulty = "hard"
-                question_type = "architecture"
+            difficulty, question_type = question_types[
+                min(index, len(question_types) - 1)
+            ]
 
             plan.append(
                 {
