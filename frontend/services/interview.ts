@@ -39,14 +39,7 @@ export async function submitAnswer(
 }
 
 /**
- * Fetch the final feedback report for a completed interview.
- *
- * Backend response:
- *
- * {
- *   sessionId: string,
- *   feedback: FeedbackReport
- * }
+ * Fetch the final feedback for a completed interview.
  */
 export async function getFeedback(
   sessionId: string
@@ -61,5 +54,13 @@ export async function getFeedback(
     }
   );
 
-  return response.feedback;
+  return {
+    ...response.feedback,
+
+    // The backend currently calls these "next".
+    // The results UI calls them "recommendedPath".
+    recommendedPath:
+      response.feedback.recommendedPath ??
+      response.feedback.next,
+  };
 }
