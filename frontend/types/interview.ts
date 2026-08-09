@@ -58,6 +58,41 @@ export interface InterviewAnswerResponse {
 }
 
 // ---------------------------------------------------------------------------
+// Dedicated feedback report
+// ---------------------------------------------------------------------------
+
+export interface FeedbackDimension {
+  name: string;
+  score: number;
+  maxScore: number;
+  feedback?: string;
+}
+
+export interface FeedbackReport {
+  overallScore: number;
+  maxScore: number;
+  summary: string;
+
+  dimensions: FeedbackDimension[];
+
+  strengths: string[];
+  gaps: string[];
+
+  rationale: string;
+
+  recommendedPath: string[];
+
+  curriculumCoverage: {
+    daysCovered?: number;
+    totalDays?: number;
+    percentage?: number;
+
+    // Allows additional backend fields without breaking TypeScript.
+    [key: string]: unknown;
+  };
+}
+
+// ---------------------------------------------------------------------------
 // UI-facing types
 // ---------------------------------------------------------------------------
 
@@ -115,7 +150,6 @@ export class ApiError extends Error {
     super(message);
 
     this.name = "ApiError";
-
     this.status = status;
   }
 }
